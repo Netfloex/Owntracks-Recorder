@@ -12,7 +12,8 @@
 		"paths": {
 			"@lib": ["src/lib"],
 			"@typings/*": ["src/typings/*"],
-			"@utils": ["src/utils"]
+			"@utils": ["src/utils"],
+			"@schemas/*": ["src/schemas/*"]
 		},
 		"skipLibCheck": true,
 		"strict": true,
