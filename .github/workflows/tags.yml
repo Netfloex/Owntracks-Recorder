@@ -19,3 +19,4 @@ jobs:
                   username: netfloex
                   token: ${{ secrets.DOCKERHUB_TOKEN }}
                   tags: netfloex/owntracks-recorder:${{ steps.vars.outputs.tag }}
+                  platforms: linux/amd64,linux/arm64

@@ -36,3 +36,4 @@ jobs:
                   username: netfloex
                   token: ${{ secrets.DOCKERHUB_TOKEN }}
                   tags: netfloex/owntracks-recorder:latest
+                  platforms: linux/amd64,linux/arm64
