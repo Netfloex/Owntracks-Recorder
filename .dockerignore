@@ -1,0 +1,7 @@
+**
+
+!/package.json
+!/rollup.config.ts
+!/src/**
+!/tsconfig.json
+!/yarn.lock
