@@ -13,6 +13,8 @@ jobs:
               uses: netfloex/actions/yarn@master
               with:
                   node-version: 16.15.1
+            - name: Generate Prisma
+              run: yarn prisma generate
 
             - name: Check Types
               run: yarn typescript
