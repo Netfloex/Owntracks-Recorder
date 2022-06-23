@@ -11,6 +11,8 @@ jobs:
         steps:
             - name: Setup yarn and install dependencies
               uses: netfloex/actions/yarn@master
+              with:
+                  node-version: 16.15.1
 
             - name: Check Types
               run: yarn typescript
