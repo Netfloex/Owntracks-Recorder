@@ -1,4 +1,4 @@
-ARG NODE_IMAGE=node:12-alpine
+ARG NODE_IMAGE=node:16-alpine
 
 FROM $NODE_IMAGE AS deps
 WORKDIR /app
@@ -9,18 +9,18 @@ RUN yarn install --frozen-lockfile
 FROM $NODE_IMAGE AS builder
 WORKDIR /app
 
-COPY . .
 COPY --from=deps /app/node_modules ./node_modules
-
+COPY . .
+RUN yarn prisma generate
 RUN yarn build
 
 FROM alpine:3 AS runner
 WORKDIR /app
 
-RUN apk add --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/v3.11/main/ nodejs=12.22.6-r0
+RUN apk add --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/v3.16/main/ nodejs=16.15.0-r1
 
-
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/dist/index.js .
-
+COPY prisma/schema.prisma prisma/schema.prisma
 
 CMD [ "node", "index.js" ]

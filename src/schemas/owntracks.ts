@@ -74,7 +74,7 @@ export const owntracksSchema = z
 		batteryStatus: data.bs,
 		connection: data.conn,
 		createdAt: data.created_at,
-		regions: data.inregions,
+		regions: data.inregions ?? [],
 		latitude: data.lat,
 		longitude: data.lon,
 		mode: data.m,
