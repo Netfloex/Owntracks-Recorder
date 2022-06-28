@@ -14,6 +14,7 @@ export default defineConfig({
 		generatedCode: "es5",
 		plugins: [terser()],
 	},
+	external: ["typeorm"],
 	plugins: [
 		nodeResolve({ preferBuiltins: true }),
 		json(),

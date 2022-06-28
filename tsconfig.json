@@ -2,9 +2,12 @@
 	"compilerOptions": {
 		"baseUrl": ".",
 		"downlevelIteration": true,
+		"emitDecoratorMetadata": true,
 		"esModuleInterop": true,
+		"experimentalDecorators": true,
 		"forceConsistentCasingInFileNames": true,
 		"incremental": true,
+		"lib": ["ES6"],
 		"module": "esnext",
 		"moduleResolution": "node",
 		"noEmit": true,
@@ -17,7 +20,7 @@
 		},
 		"skipLibCheck": true,
 		"strict": true,
-		"target": "ES5",
+		"target": "ES6",
 		"typeRoots": ["src/typings", "node_modules/@types"]
 	},
 	"ts-node": {

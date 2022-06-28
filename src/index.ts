@@ -1,9 +1,9 @@
-import { PrismaClient } from "@prisma/client"
+import { AppDataSource } from "./data-source"
 import { owntracksSchema } from "@schemas/owntracks"
 import bodyParser from "body-parser"
 import express from "express"
+import { Location } from "src/entity/Location"
 
-const prisma = new PrismaClient()
 console.log("Started")
 const app = express()
 app.use(bodyParser.json())
@@ -27,8 +27,10 @@ app.use(async (req, res) => {
 		console.log("Owntracks Data:")
 
 		console.log(data.data)
-		await prisma.location.create({ data: data.data })
-		const count = await prisma.location.count()
+		const location = Location.construct(data.data)
+		await AppDataSource.manager.save(location)
+		const count = await AppDataSource.manager.count(Location)
+
 		console.log("Currently storing " + count + " locations in the database")
 
 		res.status(200).json({ ok: true })
@@ -42,6 +44,10 @@ app.use(async (req, res) => {
 
 const port = process.env.PORT ?? 3000
 
-app.listen(port, () => {
-	console.log(`Listening on port ${port}`)
+AppDataSource.initialize().then(() => {
+	console.log("DataSource initialized")
+
+	app.listen(port, () => {
+		console.log(`Listening on port ${port}`)
+	})
 })
