@@ -1,6 +1,7 @@
 import commonjs from "@rollup/plugin-commonjs"
 import json from "@rollup/plugin-json"
 import { nodeResolve } from "@rollup/plugin-node-resolve"
+import { builtinModules } from "module"
 import { join } from "path"
 import { defineConfig } from "rollup"
 import { terser } from "rollup-plugin-terser"
@@ -14,9 +15,9 @@ export default defineConfig({
 		generatedCode: "es5",
 		plugins: [terser()],
 	},
-	external: ["typeorm"],
+	external: [...builtinModules, "typeorm"],
 	plugins: [
-		nodeResolve({ preferBuiltins: true }),
+		nodeResolve({ preferBuiltins: false, exportConditions: ["node"] }),
 		json(),
 		typescript(),
 		commonjs(),

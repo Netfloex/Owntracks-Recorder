@@ -4,12 +4,12 @@ FROM $NODE_IMAGE AS deps
 WORKDIR /app
 
 COPY package.json yarn.lock ./
+RUN yarn config set network-timeout 300000
 RUN yarn install --frozen-lockfile
 
 FROM $NODE_IMAGE AS builder
 WORKDIR /app
 
-RUN apk add --no-cache openssl
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN yarn build
