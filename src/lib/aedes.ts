@@ -1,13 +1,43 @@
 import createAedes from "aedes"
 import chalk from "chalk"
-import { createServer } from "net"
+import { pathExists, readFile } from "fs-extra"
+import { createServer as createNetServer, Server as NetServer } from "net"
+import { createServer as createTlsServer, Server as TlsServer } from "tls"
 
 import { isLocationMessage } from "@utils/isLocationMessage"
 import { jsonParseSafe } from "@utils/jsonParseSafe"
 import { parseAndInsert } from "@utils/parseAndInsert"
 
 export const aedes = createAedes()
-export const netServer = createServer(aedes.handle)
+export const initializeAedes = async (port: number): Promise<void> => {
+	let server: TlsServer | NetServer
+	const privKey = process.env.SSL_PRIVKEY
+	const pubKey = process.env.SSL_PUBKEY
+	if (privKey && pubKey) {
+		console.log(chalk`{green Enabling TLS} on Aedes`)
+		if (
+			!(
+				await Promise.all([pathExists(privKey), pathExists(pubKey)])
+			).every((exists) => exists === true)
+		) {
+			throw new Error(
+				`Private Key or Public key could not be found:\n - privKey: ${privKey}\n - pubKey: ${pubKey}`,
+			)
+		}
+
+		server = createTlsServer(
+			{
+				key: await readFile(privKey),
+				cert: await readFile(pubKey),
+			},
+			aedes.handle,
+		)
+	} else {
+		server = createNetServer(aedes.handle)
+	}
+
+	server.listen(port)
+}
 
 aedes.on("publish", async (packet) => {
 	const parsed = jsonParseSafe(packet.payload.toString())
