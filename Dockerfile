@@ -23,4 +23,6 @@ RUN apk add --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/v3.16/m
 COPY --from=builder /app/dist/index.js .
 COPY --from=builder /app/node_modules ./node_modules
 
+ENV FORCE_COLOR 1
+
 CMD [ "node", "index.js" ]
