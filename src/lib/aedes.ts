@@ -8,7 +8,11 @@ import { isLocationMessage } from "@utils/isLocationMessage"
 import { jsonParseSafe } from "@utils/jsonParseSafe"
 import { parseAndInsert } from "@utils/parseAndInsert"
 
-export const aedes = createAedes()
+export const aedes = createAedes({
+	authorizeSubscribe: () => {
+		return null
+	},
+})
 export const initializeAedes = async (port: number): Promise<void> => {
 	let server: TlsServer | NetServer
 	const privKey = process.env.SSL_PRIVKEY
