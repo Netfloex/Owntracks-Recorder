@@ -1,8 +1,9 @@
 import { AppDataSource } from "./data-source"
 import chalk from "chalk"
+import yn from "yn"
 
 import { initializeAedes } from "@lib/aedes"
-import { app } from "@lib/express"
+import { startExpressServer } from "@lib/express"
 
 console.log(chalk`{green Started}`)
 
@@ -13,19 +14,20 @@ const parseInteger = (int: string | undefined, or: number): number => {
 const port = parseInteger(process.env.PORT, 3000)
 const aedesPort = parseInteger(process.env.AEDES_PORT, 3001)
 
+const runExpress = yn(process.env.HTTP, { default: true })
+const runAedes = yn(process.env.MQTT, { default: true })
 AppDataSource.initialize()
 	.then(() => {
 		console.log("DataSource initialized")
 
-		app.listen(port, () => {
-			console.log(chalk`{bold Express} listening on port {dim ${port}}`)
-		})
+		if (runExpress) startExpressServer(port)
 
-		initializeAedes(aedesPort).then(() => {
-			console.log(
-				chalk`{bold Aedes} listening on port {dim ${aedesPort}}`,
-			)
-		})
+		if (runAedes)
+			initializeAedes(aedesPort).then(() => {
+				console.log(
+					chalk`{bold Aedes} listening on port {dim ${aedesPort}}`,
+				)
+			})
 	})
 	.catch((error) => {
 		if ("code" in error && error.code == "ECONNREFUSED") {
